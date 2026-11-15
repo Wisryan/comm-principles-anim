@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1020">
+  <title>通信原理（Ch.1–5）配音动效微课播放器</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <link rel="stylesheet" href="styles.css?v=2">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-left">
+      <span id="ep-pill" class="ep-pill">EP01</span>
+      <div class="topbar-title-wrap">
+        <div id="topbar-title" class="topbar-title">加载中...</div>
+        <div id="topbar-sub" class="topbar-sub">通信原理 Ch.1–5</div>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <span id="slide-badge" class="slide-badge"></span>
+      <button id="btn-hw-index" class="icon-btn" type="button" title="直跳19道作业题与例题">📝 作业索引</button>
+      <button id="btn-drawer" class="icon-btn" type="button" title="全部13集目录">☰ 选集</button>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <section class="stage-col">
+      <div class="scene-head">
+        <div class="scene-meta-row">
+          <span id="tag-badge" class="tag-badge tag-直觉">直觉</span>
+          <span id="scene-ref" class="scene-ref"></span>
+        </div>
+        <h1 id="scene-title" class="scene-title">正在初始化课程画面...</h1>
+      </div>
+
+      <div class="canvas-wrap">
+        <canvas id="viz-canvas"></canvas>
+        <div id="canvas-overlay" class="canvas-overlay-note"></div>
+      </div>
+
+      <div class="subtitle-card">
+        <div class="subtitle-top">
+          <span>🎙️ 课程讲解字幕</span>
+          <span id="sub-progress">字幕 1/1</span>
+        </div>
+        <div id="subtitle-text" class="subtitle-text">点击下方播放按钮，开始配合动态图解与配音学习本节内容。</div>
+        <div id="subtitle-note" class="subtitle-note hidden"></div>
+      </div>
+
+      <div id="controls-card" class="controls-card hidden">
+        <div class="card-title">
+          <span>🎛️ 实时参数实验室（暂停时也可拖动）</span>
+        </div>
+        <div id="preset-row" class="preset-row"></div>
+        <div id="slider-grid" class="slider-grid"></div>
+      </div>
+    </section>
+
+    <aside class="board-col">
+      <div id="errata-box" class="errata-box hidden"></div>
+
+      <div id="terms-card" class="card">
+        <div class="card-title"><span>双语考纲词角标</span></div>
+        <div id="terms-wrap" class="terms-wrap"></div>
+      </div>
+
+      <div id="symbol-card" class="card">
+        <div class="card-title"><span>符号物理含义色卡</span></div>
+        <div id="symbol-list" class="symbol-list"></div>
+      </div>
+
+      <div id="formula-card" class="card">
+        <div class="card-title"><span>分步推导黑板</span></div>
+        <div id="formula-list" class="formula-list"></div>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="player-dock">
+    <div id="scene-pills" class="scene-pills-scroll"></div>
+    <div class="timeline-row">
+      <div id="timeline-track" class="timeline-track">
+        <div class="timeline-bar">
+          <div id="timeline-fill" class="timeline-fill"></div>
+        </div>
+      </div>
+      <span id="time-label" class="time-label">00:00 / 00:00</span>
+    </div>
+    <div class="transport-row">
+      <div class="transport-left">
+        <button id="btn-prev" class="ctrl-btn" type="button" title="上一幕">⏮ 上一幕</button>
+        <button id="btn-play" class="ctrl-btn primary" type="button" title="播放或暂停">▶ 播放</button>
+        <button id="btn-next" class="ctrl-btn" type="button" title="下一幕">下一幕 ⏭</button>
+      </div>
+      <div class="transport-right">
+        <button id="btn-rate" class="ctrl-btn" type="button" title="倍速">1.0x</button>
+        <button id="btn-mute" class="ctrl-btn" type="button" title="静音开关">🔊 声音</button>
+      </div>
+    </div>
+  </footer>
+
+  <div id="drawer-backdrop" class="drawer-backdrop hidden">
+    <div class="drawer" role="dialog" aria-label="课程选集与作业直跳">
+      <div class="drawer-header">
+        <strong>课程总目录（Ch.1–Ch.5 · 13 集）</strong>
+        <button id="drawer-close" class="icon-btn" type="button">✕ 关闭</button>
+      </div>
+      <div class="drawer-tabs">
+        <button id="tab-episodes" class="drawer-tab active" type="button">按章节看 (13集)</button>
+        <button id="tab-homework" class="drawer-tab" type="button">作业题 / 例题直跳</button>
+      </div>
+      <div id="drawer-body" class="drawer-body"></div>
+    </div>
+  </div>
+
+  <audio id="narrator-audio" preload="auto"></audio>
+
+  <script>
+    window.COMM_EPISODES = [];
+    window.COMM_TIMINGS = {};
+  </script>
+  <script src="engine/math-helpers.js?v=2"></script>
+  <script src="engine/viz.js?v=2"></script>
+  <script src="episodes/timings.js?v=2"></script>
+  <script src="episodes/ep01.js?v=2"></script>
+  <script src="episodes/ep02.js?v=2"></script>
+  <script src="episodes/ep03.js?v=2"></script>
+  <script src="episodes/ep04.js?v=2"></script>
+  <script src="episodes/ep05.js?v=2"></script>
+  <script src="episodes/ep06.js?v=2"></script>
+  <script src="episodes/ep07.js?v=2"></script>
+  <script src="episodes/ep08.js?v=2"></script>
+  <script src="episodes/ep09.js?v=2"></script>
+  <script src="episodes/ep10.js?v=2"></script>
+  <script src="episodes/ep11.js?v=2"></script>
+  <script src="episodes/ep12.js?v=2"></script>
+  <script src="episodes/ep13.js?v=2"></script>
+  <script src="engine/player.js?v=2"></script>
+</body>
+</html>
